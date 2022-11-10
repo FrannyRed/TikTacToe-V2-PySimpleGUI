@@ -49,19 +49,34 @@ def TikTacToe():
                 for y in range(MAX_ROWS):
                     for z in range(MAX_COL):
                         window[(y,z)].update(disabled=True)
-            # elif x + 1 == 2:
-            #    window[event].update('X', button_color=('white', 'purple'))
-            #    window[event].update(disabled=True)
 
     window.close()
 
+# this function will review players moves to see if they won
 def win(moves = []):
-    if moves == [(0, 0), (0, 1), (0, 2)]:
-        return True
-    elif moves == [(0, 0), (1, 0), (2, 0)]:
-        return True
-    elif moves == [(1, 1), (1, 2), (1, 3)]:
-        return True
+    wins = {0 : [(0, 0), (0, 1), (0, 2)], # horizontal top row
+            1 : [(1, 0), (1, 1), (1, 2)], # horizontal middle row
+            2 : [(1, 0), (1, 1), (1, 2)], # horizontal middle row
+            3 : [(2, 0), (2, 1), (2, 2)], # horizontal bottom row
+            4 : [(0, 0), (1, 0), (2, 0)], # vertical first column
+            5 : [(0, 1), (1, 1), (2, 1)], # vertical second column
+            6 : [(0, 2), (1, 2), (2, 2)], # vertical third column
+            7 : [(0, 0), (1, 1), (2, 2)], # diagonal top left to bottom right
+            8 : [(0, 2), (1, 1), (2, 0)]  # diagonal top right to bottom left
+            }                             # end dictionary
+
+    # this section iterates through dictionary of winning moves
+    # and compares them with the players moves to detect a win
+    for dict in range(9):   # increment through each dictionary list
+        counter = 0
+        for i in range(len(moves)): # increment through players moves
+            for dict_moves in range(3): # increment through winning moves
+                # if player moves are in winning moves, increment counter
+                if moves[i] == wins[dict][dict_moves]:
+                    counter += 1
+        # if the counter is 3 then player won
+        if counter == 3:
+            return True
     else:
         return False
 
