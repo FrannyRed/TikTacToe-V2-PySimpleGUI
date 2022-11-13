@@ -4,6 +4,8 @@ def TikTacToe():
     sg.theme('Dark')
     MAX_ROWS = MAX_COL = 3
     player1 = []
+    player2 = []
+    turns = 1
 
     layout = [[sg.Text('TIK TAC TOE')],
               [sg.Text('Player 1 is "O"; Player 2 is "X"')]
@@ -20,8 +22,8 @@ def TikTacToe():
     # Add the board to the layout
     layout += board
 
-    # Add the rest button as the last row
-    layout += [[sg.Text(key='-MESSAGE-')],
+    # Add the additional messages and buttons below the board
+    layout += [[sg.Text('Player 1 turn', key='-MESSAGE-')],
                [sg.Text(key='-WIN-')],
                [sg.Button('Reset Game', button_color=('white', 'red'), key='-RESET-'),
                 sg.Button('Exit', button_color=('white', 'red'))]
@@ -30,7 +32,7 @@ def TikTacToe():
     window = sg.Window('TIC TAC TOE', layout)
 
     # The event loop
-    while True:
+    while turns < 11:
         event, values = window.read()
         print(event, values)
         if event in (sg.WIN_CLOSED, 'Exit'):
@@ -38,17 +40,36 @@ def TikTacToe():
         if event == '-RESET-':
             window.close()
             return event
-        else:
-            window[event].update('O', button_color=('white', 'blue'))
+        if turns == 9:
+            window['-MESSAGE-'].update('The match is a draw!')
+            window['-WIN-'].update('Play again?')
+            for y in range(MAX_ROWS):
+                    for z in range(MAX_COL):
+                        window[(y,z)].update(disabled=True)
+        elif True: window['-MESSAGE-'].update('Player %s turn'%(str((turns % 2) + 1)))
+        if turns % 2 == 1:
+            window[event].update('O', button_color=('white', 'blue'), disabled_button_color=('white', 'blue'))
             window[event].update(disabled=True)
-            player1.append(event)
-            window['-MESSAGE-'].update(player1)
-            winwin = win(player1)
+            player2.append(event)
+            winwin = win(player2)
             if winwin == True:
-                window['-WIN-'].update('Player wins!')
+                window['-WIN-'].update('Player 1 wins!')
+                window['-MESSAGE-'].update('')
                 for y in range(MAX_ROWS):
                     for z in range(MAX_COL):
                         window[(y,z)].update(disabled=True)
+        if turns % 2 == 0:
+            window[event].update('X', button_color=('white', 'red'), disabled_button_color=('white', 'red'))
+            window[event].update(disabled=True)
+            player1.append(event)
+            winwin = win(player1)
+            if winwin == True:
+                window['-WIN-'].update('Player 2 wins!')
+                window['-MESSAGE-'].update('')
+                for y in range(MAX_ROWS):
+                    for z in range(MAX_COL):
+                        window[(y,z)].update(disabled=True)
+        turns += 1
 
     window.close()
 
